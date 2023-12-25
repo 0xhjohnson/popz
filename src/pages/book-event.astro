@@ -1,0 +1,247 @@
+---
+import { Schema } from 'astro-seo-schema'
+import { Image } from 'astro:assets'
+import { z } from 'zod'
+import { clsx } from 'clsx'
+import Layout from '../layouts/Layout.astro'
+import avatar from '../assets/avatar.png'
+
+const eventSchema = z.object({
+  name: z.string().min(1),
+  email: z.string().email('Not a valid email address.'),
+  phone: z.string().min(7).max(17),
+  details: z.string().min(1)
+})
+
+const errors = {
+  name: '',
+  email: '',
+  phone: '',
+  details: ''
+}
+
+if (Astro.request.method === 'POST') {
+  try {
+    const data = await Astro.request.formData()
+    const name = data.get('name')
+    const email = data.get('email')
+    const phone = data.get('phone-number')
+    const details = data.get('details')
+    const event = {
+      name,
+      email,
+      phone,
+      details
+    }
+
+    try {
+      eventSchema.parse(event)
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        const { fieldErrors } = err.flatten()
+        for (const field in fieldErrors) {
+          errors[field] = fieldErrors[field].join(', ')
+        }
+      }
+    }
+
+    console.log(errors)
+    const hasErrors = Object.values(errors).some((msg) => msg)
+    if (!hasErrors) {
+      console.log(event)
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(error.message)
+    }
+  }
+}
+---
+
+<Layout>
+  <Schema
+    item={{
+      '@context': 'https://schema.org',
+      '@type': 'EventReservation',
+      name: "Event Booking at Pop'z BBQ",
+      description:
+        "Book your next event with Pop'z BBQ for an unforgettable experience with top-notch South Georgia-style BBQ."
+    }}
+    slot="head"
+  />
+  <div class="py-24 lg:py-32 px-4 lg:px-6">
+    <div class="mx-auto max-w-xl lg:max-w-4xl">
+      <h2 class="text-gray-900 font-bold text-4xl tracking-tight">
+        Let&apos;s talk about your event
+      </h2>
+      <p class="text-gray-700 leading-8 text-lg mt-2">
+        We guarantee a seamless experience for your next event, no matter the
+        size.
+      </p>
+      <div class="mt-16 flex flex-col lg:flex-row sm:gap-y-20 gap-16">
+        <form class="lg:flex-auto" method="POST">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-8">
+            <div class="sm:col-span-2">
+              <label
+                for="name"
+                class="block text-sm font-semibold leading-6 text-gray-900"
+                >Name</label
+              >
+              <div class="mt-2.5">
+                <input
+                  type="text"
+                  name="name"
+                  id="name"
+                  autocomplete="name"
+                  aria-describedby="name-error"
+                  class={clsx(
+                    'block w-full rounded-md border-0 px-3.5 py-2 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6',
+                    {
+                      'text-red-900 ring-red-300 placeholder:text-red-300 focus:ring-red-500':
+                        errors.name,
+                      'text-gray-900 ring-gray-300 placeholder:text-gray-400 focus:ring-orange-600':
+                        !errors.name
+                    }
+                  )}
+                />
+              </div>
+              {
+                errors.name && (
+                  <p class="mt-2 text-sm text-red-600" id="name-error">
+                    {errors.name}
+                  </p>
+                )
+              }
+            </div>
+            <div>
+              <label
+                for="email"
+                class="block text-sm font-semibold leading-6 text-gray-900"
+                >Email</label
+              >
+              <div class="mt-2">
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  placeholder="you@example.com"
+                  aria-describedby="email-error"
+                  required
+                  class={clsx(
+                    'block w-full rounded-md border-0 px-3.5 py-2 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6',
+                    {
+                      'text-red-900 ring-red-300 placeholder:text-red-300 focus:ring-red-500':
+                        errors.email,
+                      'text-gray-900 ring-gray-300 placeholder:text-gray-400 focus:ring-orange-600':
+                        !errors.email
+                    }
+                  )}
+                />
+              </div>
+              {
+                errors.email && (
+                  <p class="mt-2 text-sm text-red-600" id="email-error">
+                    {errors.email}
+                  </p>
+                )
+              }
+            </div>
+            <div>
+              <label
+                for="phone-number"
+                class="block text-sm font-semibold leading-6 text-gray-900"
+                >Phone number</label
+              >
+              <div class="mt-2">
+                <input
+                  type="tel"
+                  name="phone-number"
+                  id="phone-number"
+                  aria-describedby="phone-error"
+                  required
+                  class={clsx(
+                    'block w-full rounded-md border-0 px-3.5 py-2 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6',
+                    {
+                      'text-red-900 ring-red-300 placeholder:text-red-300 focus:ring-red-500':
+                        errors.phone,
+                      'text-gray-900 ring-gray-300 placeholder:text-gray-400 focus:ring-orange-600':
+                        !errors.phone
+                    }
+                  )}
+                />
+              </div>
+              {
+                errors.phone && (
+                  <p class="mt-2 text-sm text-red-600" id="phone-error">
+                    {errors.phone}
+                  </p>
+                )
+              }
+            </div>
+            <div class="sm:col-span-2">
+              <label
+                for="details"
+                class="block text-sm font-semibold leading-6 text-gray-900"
+                >Details</label
+              >
+              <div class="mt-2.5">
+                <textarea
+                  name="details"
+                  id="details"
+                  rows="4"
+                  aria-describedby="details-error"
+                  required
+                  class={clsx(
+                    'block w-full rounded-md border-0 px-3.5 py-2 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6',
+                    {
+                      'text-red-900 ring-red-300 placeholder:text-red-300 focus:ring-red-500':
+                        errors.details,
+                      'text-gray-900 ring-gray-300 placeholder:text-gray-400 focus:ring-orange-600':
+                        !errors.details
+                    }
+                  )}></textarea>
+              </div>
+              {
+                errors.details && (
+                  <p class="mt-2 text-sm text-red-600" id="details-error">
+                    {errors.details}
+                  </p>
+                )
+              }
+            </div>
+          </div>
+          <div class="mt-10">
+            <button
+              type="submit"
+              class="block w-full rounded-md bg-orange-700 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-orange-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-700"
+              >Let's talk</button
+            >
+          </div>
+        </form>
+        <div class="lg:flex-none lg:w-80 lg:mt-6">
+          <blockquote class="leading-8 font-semibold text-lg">
+            <p>
+              “Over the years I have developed a reputation for some of the best
+              South Georgia style BBQ in the area and uphold that reputation
+              with every event.”
+            </p>
+          </blockquote>
+          <figcaption class="flex gap-x-6 mt-10">
+            <Image
+              src={avatar}
+              alt="Steve Johnson portrait"
+              quality="high"
+              class="flex-none h-12 w-12 rounded-full"
+            />
+            <div>
+              <span class="block font-semibold text-base">Steve Johnson</span>
+              <span class="block leading-6 text-sm"
+                >Owner of Pop&apos;z BBQ & Catering</span
+              >
+            </div>
+          </figcaption>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>

@@ -1,0 +1,28 @@
+---
+import '@fontsource-variable/inter'
+import NavBar from '../components/NavBar.astro'
+import Footer from '../components/Footer.astro'
+
+const { title, isFullWidth } = Astro.props
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <slot name="head" />
+    {title && <title>{title}</title>}
+  </head>
+  <body class="font-sans flex h-screen flex-col">
+    <NavBar />
+    <main class={isFullWidth ? 'flex-1' : 'px-2 sm:px-4 flex-1 justify-center'}>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

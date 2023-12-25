@@ -1,0 +1,21 @@
+---
+const { categories } = Astro.props
+---
+
+<div class="space-y-6">
+  {
+    categories.map((category) => (
+      <div class="space-y-2">
+        <span class="text-sm text-gray-500">{category.name}</span>
+        <ul class="space-y-4">
+          {category.items.map((item) => (
+            <li class="text-gray-900">
+              {item.name}
+              <p class="text-sm text-gray-700">{item.description}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))
+  }
+</div>

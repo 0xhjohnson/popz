@@ -1,0 +1,149 @@
+---
+import { Schema } from 'astro-seo-schema'
+import { Image } from 'astro:assets'
+import Layout from '../layouts/Layout.astro'
+import donSands from '../assets/don-sands.jpeg'
+
+export const prerender = true
+---
+
+<Layout>
+  <Schema
+    item={{
+      '@context': 'https://schema.org',
+      '@type': 'AboutPage',
+      mainEntity: {
+        '@type': 'Restaurant',
+        name: `Pop'z BBQ & Catering`,
+        description:
+          "Experience 'Bad to the Bone' South Georgia-style BBQ, rooted in tradition and passion, from our custom wood-burning pits to our signature homemade sauce.",
+        url: 'https://popzbbq.com',
+        telephone: '+1-239-823-0485',
+        email: 'popzbbq@embarqmail.com',
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: '11770 Metro Parkway',
+          addressLocality: 'Fort Myers',
+          addressRegion: 'Florida',
+          postalCode: '33966',
+          addressCountry: 'USA'
+        },
+        logo: 'https://popzbbq.com/images/logo-wood.jpg',
+        priceRange: '$$',
+        servesCuisine: 'South Georgia BBQ',
+        hasMenu: 'https://popzbbq.com/menu',
+        openingHours: 'Mo-Su 00:00-24:00',
+        sameAs: [
+          'https://www.facebook.com/pg/PopzBBQ',
+          'https://www.weddingwire.com/reviews/popz-bbq-catering-fort-myers/79b9a0461789af59.html',
+          'https://www.yelp.com/biz/popz-bbq-and-catering-fort-myers'
+        ],
+        additionalProperty: [
+          {
+            '@type': 'PropertyValue',
+            name: 'Legacy',
+            value: 'Inspired by my grandfather, Don Sands.'
+          },
+          {
+            '@type': 'PropertyValue',
+            name: 'Flavor',
+            value:
+              'Slow-cooked over wood-burning pits, using oak, hickory, and pecan.'
+          },
+          {
+            '@type': 'PropertyValue',
+            name: 'Service',
+            value: 'Tailored service for gatherings of all sizes.'
+          },
+          {
+            '@type': 'PropertyValue',
+            name: 'Menu',
+            value: 'Expanded offerings from pulled pork to artisanal steaks.'
+          }
+        ]
+      }
+    }}
+    slot="head"
+  />
+  <div class="py-24 lg:py-32 px-4 lg:px-6">
+    <div
+      class="mx-auto max-w-3xl lg:max-w-4xl leading-7 text-base text-gray-700"
+    >
+      <h1 class="text-gray-900 font-bold text-4xl tracking-tight">
+        Welcome to Pop&apos;z BBQ
+      </h1>
+      <p class="mt-6 leading-8 text-xl">
+        Where we serve up &apos;Bad to the Bone&apos; South Georgia-style BBQ,
+        cooked to order.
+      </p>
+      <div class="mt-10 max-w-2xl">
+        <h2 class="mt-8 tracking-tight font-bold text-gray-900 text-2xl">
+          A Legacy Rooted in Tradition
+        </h2>
+        <p class="mt-6">
+          At the heart of Pop'z BBQ & Catering lies a rich legacy, inspired by
+          the original Pop—my grandfather, Don Sands. Growing up, my fondest
+          memories revolved around hunting, fishing, and, most importantly,
+          learning the art of open-fire cooking from Pop himself. His wisdom,
+          the kind you can't find in books, continues to guide me every time I
+          fire up one of our custom wood-burning pits. From venison sausage to
+          hearty hams, Pop instilled in me a passion that fuels our commitment
+          to authentic, South Georgia-style BBQ.
+        </p>
+        <figure class="mt-8">
+          <Image
+            src={donSands}
+            alt="Don Sands cooking over open-fire"
+            quality="high"
+            class="rounded-xl aspect-video object-cover"
+          />
+          <figcaption class="mt-4 flex text-gray-500 leading-6 text-sm gap-x-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              class="w-5 h-5 flex-none mt-0.5 text-gray-300"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A1.75 1.75 0 0 0 10.747 15H11a.75.75 0 0 0 0-1.5h-.253a.25.25 0 0 1-.244-.304l.459-2.066A1.75 1.75 0 0 0 9.253 9H9Z"
+                clip-rule="evenodd"></path>
+            </svg>
+             Don Sands (Pop) cooking over open-fire
+          </figcaption>
+        </figure>
+        <h2 class="mt-16 tracking-tight font-bold text-gray-900 text-2xl">
+          Artistry in Smoke and Flavor
+        </h2>
+        <p class="mt-6">
+          Our culinary craft is defined by patience and precision. Each meat
+          selection undergoes a slow-cooking process over our custom
+          wood-burning pits. Utilizing oak for warmth and a blend of hickory and
+          pecan, we craft flavors that are unmistakably Pop'z BBQ. With a
+          meticulous 10-12 hour slow-cook, we ensure every bite is tender and
+          bursting with flavor.
+        </p>
+        <h2 class="mt-16 tracking-tight font-bold text-gray-900 text-2xl">
+          Tailored Service for Every Occasion
+        </h2>
+        <p class="mt-6">
+          From cozy gatherings of 30 to grand affairs hosting 1,500, Pop'z BBQ
+          stands by its promise of unparalleled service. Our commitment goes
+          beyond food—it's about fostering enduring relationships with our
+          customers. Recognized for our superior South Georgia BBQ, we maintain
+          this distinction with every event we serve.
+        </p>
+        <h2 class="mt-16 tracking-tight font-bold text-gray-900 text-2xl">
+          More Than Just BBQ
+        </h2>
+        <p class="mt-6">
+          While deeply rooted in authentic BBQ, our menu has has expanded to
+          cater to diverse tastes. From mouthwatering pulled pork to artisanal
+          steaks, we cater to a spectrum of tastes. And, of course, no meal is
+          complete without our signature homemade BBQ sauce—a treasured family
+          heirloom passed down through generations.
+        </p>
+      </div>
+    </div>
+  </div>
+</Layout>

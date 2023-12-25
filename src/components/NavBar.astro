@@ -1,0 +1,168 @@
+---
+import { Image } from 'astro:assets'
+import logoHome from '../assets/logo-home.png'
+---
+
+<nav-bar>
+  <div class="bg-gray-800">
+    <div
+      class="flex px-2 py-1 sm:px-3 md:px-4 justify-between sm:justify-start items-center"
+    >
+      <div class="p-1 mr-2">
+        <a href="/" class="text-white no-underline block">
+          <Image
+            src={logoHome}
+            alt="Pop'z BBQ logo"
+            quality="high"
+            width={100}
+          />
+        </a>
+      </div>
+      <div class="flex items-center sm:hidden">
+        <button
+          id="menu-button"
+          class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:bg-gray-700 focus:text-white transition duration-150 ease-in-out"
+          aria-expanded="false"
+        >
+          <svg
+            class="h-6 w-6"
+            stroke="currentColor"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              id="menu-icon"
+              class="inline-flex"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"></path>
+            <path
+              id="close-icon"
+              class="hidden"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+      {/* full size menu for devices except phones */}
+      <nav class="hidden sm:block">
+        <ul class="flex items-center py-2 ml-6">
+          <li>
+            <a
+              href="/"
+              class="block px-3 py-2 rounded-md font-medium text-gray-300 transition duration-150 ease-in-out text-sm hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
+              >Home</a
+            >
+          </li>
+          <li>
+            <a
+              href="/about"
+              class="ml-4 block px-3 py-2 rounded-md font-medium text-gray-300 transition duration-150 ease-in-out text-sm hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
+              >About</a
+            >
+          </li>
+          <li>
+            <a
+              href="/menu"
+              class="ml-4 block px-3 py-2 rounded-md font-medium text-gray-300 transition duration-150 ease-in-out text-sm hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
+              >Menu</a
+            >
+          </li>
+          <li>
+            <a
+              href="/book-event"
+              class="ml-4 block px-3 py-2 rounded-md font-medium text-gray-300 transition duration-150 ease-in-out text-sm hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
+              >Book an Event</a
+            >
+          </li>
+        </ul>
+      </nav>
+    </div>
+    {/* mobile menu dropdown */}
+    <nav id="mobile-menu" class="px-2 pt-2 pb-3 hidden sm:hidden">
+      <ul>
+        <li>
+          <a
+            href="/"
+            class="block px-3 py-2 rounded-md font-medium text-gray-300 transition duration-150 ease-in-out text-sm hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
+            >Home</a
+          >
+        </li>
+        <li>
+          <a
+            href="/about"
+            class="mt-1 block px-3 py-2 rounded-md font-medium text-gray-300 transition duration-150 ease-in-out text-sm hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
+            >About</a
+          >
+        </li>
+        <li>
+          <a
+            href="/menu"
+            class="mt-1 block px-3 py-2 rounded-md font-medium text-gray-300 transition duration-150 ease-in-out text-sm hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
+            >Menu</a
+          >
+        </li>
+        <li>
+          <a
+            href="/book-event"
+            class="mt-1 block px-3 py-2 rounded-md font-medium text-gray-300 transition duration-150 ease-in-out text-sm hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
+            >Book an Event</a
+          >
+        </li>
+      </ul>
+    </nav>
+  </div>
+</nav-bar>
+
+<script>
+  class NavBar extends HTMLElement {
+    constructor() {
+      super()
+      let isOpen = false
+
+      const menuButton = this.querySelector('button')
+      const menuIcon = this.querySelector('#menu-icon')
+      const closeIcon = this.querySelector('#close-icon')
+      const links = this.querySelectorAll('li a')
+      const mobileMenu = this.querySelector('#mobile-menu')
+
+      links.forEach((link) => {
+        if ('href' in link && link.href === window.location.href) {
+          link.classList.add('bg-gray-900', 'text-white')
+        } else {
+          link.classList.remove('bg-gray-900', 'text-white')
+        }
+      })
+
+      menuButton.addEventListener('click', () => {
+        isOpen = !isOpen
+        menuButton.setAttribute('aria-expanded', String(isOpen))
+
+        if (isOpen) {
+          menuIcon.classList.remove('inline-flex')
+          menuIcon.classList.add('hidden')
+
+          closeIcon.classList.remove('hidden')
+          closeIcon.classList.add('inline-flex')
+
+          mobileMenu.classList.remove('hidden')
+          mobileMenu.classList.add('block')
+        } else {
+          menuIcon.classList.remove('hidden')
+          menuIcon.classList.add('inline-flex')
+
+          closeIcon.classList.remove('inline-flex')
+          closeIcon.classList.add('hidden')
+
+          mobileMenu.classList.remove('block')
+          mobileMenu.classList.add('hidden')
+        }
+      })
+    }
+  }
+
+  customElements.define('nav-bar', NavBar)
+</script>
