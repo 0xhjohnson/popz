@@ -3,6 +3,7 @@ import { Schema } from 'astro-seo-schema'
 import { Image } from 'astro:assets'
 import { z } from 'zod'
 import { clsx } from 'clsx'
+import { generateTitle } from '../utils'
 import Layout from '../layouts/Layout.astro'
 import avatar from '../assets/avatar.png'
 
@@ -58,7 +59,7 @@ if (Astro.request.method === 'POST') {
 }
 ---
 
-<Layout>
+<Layout title={generateTitle('Book an Event')}>
   <Schema
     item={{
       '@context': 'https://schema.org',

@@ -1,13 +1,14 @@
 ---
 import { Schema } from 'astro-seo-schema'
 import { Image } from 'astro:assets'
+import { generateTitle } from '../utils'
 import Layout from '../layouts/Layout.astro'
 import donSands from '../assets/don-sands.jpeg'
 
 export const prerender = true
 ---
 
-<Layout>
+<Layout title={generateTitle('About Us')}>
   <Schema
     item={{
       '@context': 'https://schema.org',

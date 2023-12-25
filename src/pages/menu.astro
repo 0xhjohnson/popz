@@ -1,5 +1,6 @@
 ---
 import { Schema } from 'astro-seo-schema'
+import { generateTitle } from '../utils'
 import CategoryDivider from '../components/CategoryDivider.astro'
 import MenuCategories from '../components/MenuCategories.astro'
 import Layout from '../layouts/Layout.astro'
@@ -148,7 +149,7 @@ const items = [
 export const prerender = true
 ---
 
-<Layout>
+<Layout title={generateTitle('Catering Menu')}>
   <Schema
     item={{
       '@context': 'https://schema.org',
