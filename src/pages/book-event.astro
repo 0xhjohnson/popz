@@ -46,10 +46,52 @@ if (Astro.request.method === 'POST') {
       }
     }
 
-    console.log(errors)
     const hasErrors = Object.values(errors).some((msg) => msg)
     if (!hasErrors) {
-      console.log(event)
+      const response = await fetch('https://api.mailchannels.net/tx/v1/send', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          personalizations: [
+            {
+              to: [{ name: 'Steve Johnson', email: 'hi@0xhjohnson.com' }],
+              reply_to: {
+                name: event.name,
+                email: event.email
+              }
+            }
+          ],
+          from: {
+            name: 'Popz BBQ',
+            email: 'no-reply@0xhjohnson.com'
+          },
+          subject: 'Website booking inquiry',
+          content: [
+            {
+              type: 'text/plain',
+              value: `${event.name} has requested to book an event.
+              Details:
+              ${event.details}
+              
+              Contact info:
+              email: ${event.email}
+              phone: ${event.phone}`
+            }
+          ]
+        })
+      })
+      if (!response.ok) {
+        try {
+          const { errors } = await response.clone().json()
+          console.error(errors)
+        } catch {
+          console.error(
+            `failed to send book event email, status ${response.status}`
+          )
+        }
+      }
     }
   } catch (error) {
     if (error instanceof Error) {
