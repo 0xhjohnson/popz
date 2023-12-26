@@ -56,7 +56,7 @@ if (Astro.request.method === 'POST') {
         body: JSON.stringify({
           personalizations: [
             {
-              to: [{ name: 'Steve Johnson', email: 'hi@0xhjohnson.com' }],
+              to: [{ name: 'Steve Johnson', email: 'steve@popzbbq.com' }],
               reply_to: {
                 name: event.name,
                 email: event.email
@@ -65,7 +65,7 @@ if (Astro.request.method === 'POST') {
           ],
           from: {
             name: 'Popz BBQ',
-            email: 'no-reply@0xhjohnson.com'
+            email: 'noreply@popzbbq.com'
           },
           subject: 'Website booking inquiry',
           content: [
