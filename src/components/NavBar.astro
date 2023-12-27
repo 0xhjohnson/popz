@@ -118,6 +118,8 @@ import logoHome from '../assets/logo-home.png'
 </nav-bar>
 
 <script>
+  import { stripTrailingSlash } from '../utils'
+
   class NavBar extends HTMLElement {
     constructor() {
       super()
@@ -130,7 +132,10 @@ import logoHome from '../assets/logo-home.png'
       const mobileMenu = this.querySelector('#mobile-menu')
 
       links.forEach((link) => {
-        if ('href' in link && link.href === window.location.href) {
+        if (
+          'href' in link &&
+          link.href === stripTrailingSlash(window.location.href)
+        ) {
           link.classList.add('bg-gray-900', 'text-white')
         } else {
           link.classList.remove('bg-gray-900', 'text-white')
