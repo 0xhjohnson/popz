@@ -134,7 +134,8 @@ import logoHome from '../assets/logo-home.png'
       links.forEach((link) => {
         if (
           'href' in link &&
-          link.href === stripTrailingSlash(window.location.href)
+          (link.href === window.location.href ||
+            link.href === stripTrailingSlash(window.location.href))
         ) {
           link.classList.add('bg-gray-900', 'text-white')
         } else {
