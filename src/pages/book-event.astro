@@ -14,6 +14,13 @@ const eventSchema = z.object({
   details: z.string().min(1)
 })
 
+const form = {
+  name: '',
+  email: '',
+  phone: '',
+  details: ''
+}
+
 const errors = {
   name: '',
   email: '',
@@ -25,9 +32,14 @@ if (Astro.request.method === 'POST') {
   try {
     const data = await Astro.request.formData()
     const name = data.get('name')
+    form.name = name as string
     const email = data.get('email')
+    form.email = email as string
     const phone = data.get('phone-number')
+    form.phone = phone as string
     const details = data.get('details')
+    form.details = details as string
+
     const event = {
       name,
       email,
@@ -138,6 +150,7 @@ if (Astro.request.method === 'POST') {
                   autocomplete="name"
                   aria-describedby="name-error"
                   required
+                  value={form.name}
                   class={clsx(
                     'block w-full rounded-md border-0 px-3.5 py-2 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6',
                     {
@@ -171,6 +184,7 @@ if (Astro.request.method === 'POST') {
                   placeholder="you@example.com"
                   aria-describedby="email-error"
                   required
+                  value={form.email}
                   class={clsx(
                     'block w-full rounded-md border-0 px-3.5 py-2 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6',
                     {
@@ -203,6 +217,7 @@ if (Astro.request.method === 'POST') {
                   id="phone-number"
                   aria-describedby="phone-error"
                   required
+                  value={form.phone}
                   class={clsx(
                     'block w-full rounded-md border-0 px-3.5 py-2 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6',
                     {
@@ -243,7 +258,8 @@ if (Astro.request.method === 'POST') {
                       'text-gray-900 ring-gray-300 placeholder:text-gray-400 focus:ring-orange-600':
                         !errors.details
                     }
-                  )}></textarea>
+                  )}>{form.details}</textarea
+                >
               </div>
               {
                 errors.details && (
