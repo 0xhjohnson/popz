@@ -13,6 +13,7 @@ import react from '@astrojs/react'
 export default defineConfig({
   site: 'https://popzbbq.com',
   output: 'server',
+  prefetch: true,
   adapter: cloudflare({
     mode: 'directory',
     imageService: 'passthrough'

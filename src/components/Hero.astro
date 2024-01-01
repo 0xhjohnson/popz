@@ -32,6 +32,7 @@ const homepageHero = await getHomepageHero()
             <div class="rounded-md shadow">
               <a
                 href={homepageHero.primaryCta.link}
+                data-astro-prefetch
                 class="font-medium rounded-md w-full flex items-center justify-center px-8 py-3 text-base leading-6 md:py-4 md:text-lg md:px-10 bg-orange-700 hover:bg-orange-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-700"
                 >{homepageHero.primaryCta.text}</a
               >
@@ -39,6 +40,7 @@ const homepageHero = await getHomepageHero()
             <div class="mt-3 sm:mt-0 sm:ml-3">
               <a
                 href={homepageHero.secondaryCta.link}
+                data-astro-prefetch
                 class="font-medium rounded-md w-full flex items-center justify-center px-8 py-3 text-base leading-6 md:py-4 md:text-lg md:px-10 bg-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                 >{homepageHero.secondaryCta.text}</a
               >
