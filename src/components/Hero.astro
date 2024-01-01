@@ -1,6 +1,9 @@
 ---
 import { Image } from 'astro:assets'
-import heroImage from '../assets/popz-bg-wood.jpg'
+import { getHomepageHero } from '../services/sanity/hero'
+import { getImageProps } from '../services/sanity/utils/image'
+
+const homepageHero = await getHomepageHero()
 ---
 
 <div class="relative overflow-hidden">
@@ -15,30 +18,29 @@ import heroImage from '../assets/popz-bg-wood.jpg'
           <h2
             class="text-4xl tracking-tight leading-10 font-extrabold text-gray-900 sm:text-5xl sm:leading-none md:text-6xl"
           >
-            Bad to the Bone
+            {homepageHero.title.slogan}
             <br class="xl:hidden" />
-            <span class="text-orange-700">South Georgia BBQ</span>
+            <span class="text-orange-700">{homepageHero.title.description}</span
+            >
           </h2>
           <p
             class="mt-3 text-base text-gray-700 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0"
           >
-            We provide South Georgia style BBQ that people love, day after day,
-            event after event. It is not a big secret. People just want more of
-            it.
+            {homepageHero.summary}
           </p>
           <div class="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
             <div class="rounded-md shadow">
               <a
-                href="/book-event"
+                href={homepageHero.primaryCta.link}
                 class="font-medium rounded-md w-full flex items-center justify-center px-8 py-3 text-base leading-6 md:py-4 md:text-lg md:px-10 bg-orange-700 hover:bg-orange-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-700"
-                >Book an Event</a
+                >{homepageHero.primaryCta.text}</a
               >
             </div>
             <div class="mt-3 sm:mt-0 sm:ml-3">
               <a
-                href="/menu"
+                href={homepageHero.secondaryCta.link}
                 class="font-medium rounded-md w-full flex items-center justify-center px-8 py-3 text-base leading-6 md:py-4 md:text-lg md:px-10 bg-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                >View Menu</a
+                >{homepageHero.secondaryCta.text}</a
               >
             </div>
           </div>
@@ -55,12 +57,17 @@ import heroImage from '../assets/popz-bg-wood.jpg'
     </div>
     <div class="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
       <Image
-        src={heroImage}
         alt="Pop'z BBQ logo on wood background"
-        widths={[430, 768, 1023]}
-        sizes="(max-width: 430px) 430px, (max-width: 768px) 768px, 1023px"
-        quality="mid"
         class="w-full h-full object-cover"
+        decoding="auto"
+        loading="eager"
+        fetchpriority="high"
+        {...getImageProps({
+          image: homepageHero.mainImage,
+          maxWidth: 1023,
+          customWidthSteps: [430, 640, 768, 890, 1023],
+          sizes: '(max-width: 1023px) 100vw, 50vw'
+        })}
       />
     </div>
   </div>

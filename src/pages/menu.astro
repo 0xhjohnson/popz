@@ -1,150 +1,13 @@
 ---
 import { Schema } from 'astro-seo-schema'
-import { generateTitle } from '../utils'
+import { buildSeoMenuSection, generateTitle } from '../utils'
+import { getCateringMenu } from '../services/sanity/cateringMenu'
 import CategoryDivider from '../components/CategoryDivider.astro'
 import MenuCategories from '../components/MenuCategories.astro'
 import Layout from '../layouts/Layout.astro'
 
-const items = [
-  {
-    _type: 'menu-category',
-    name: 'Starters',
-    categories: [
-      {
-        _type: 'menu-subcategory',
-        name: 'Delicious Starters',
-        items: [
-          {
-            _type: 'menu-item',
-            name: 'Smoked Mini-Sweet Peppers',
-            description: 'Stuffed with cream cheese and wrapped in bacon'
-          },
-          {
-            _type: 'menu-item',
-            name: 'BBQ Shrimp',
-            description: `Pop'z BBQ shrimp`
-          }
-        ]
-      }
-    ]
-  },
-  {
-    _type: 'menu-category',
-    name: 'Meats & Seafood',
-    categories: [
-      {
-        _type: 'menu-subcategory',
-        name: 'Pork',
-        items: [
-          {
-            _type: 'menu-item',
-            name: 'Slow Cooked Pulled Pork',
-            description: 'Tender pulled pork cooked 10 to 12 hours'
-          },
-          {
-            _type: 'menu-item',
-            name: 'Whole Hog',
-            description: 'Whole hog with fruit over eyes for presentation'
-          },
-          {
-            _type: 'menu-item',
-            name: 'South Georgia Style Ribs',
-            description: 'Fall off the bone, south Georgia style ribs'
-          }
-        ]
-      },
-      {
-        _type: 'menu-subcategory',
-        name: 'Chicken',
-        items: [
-          {
-            _type: 'menu-item',
-            name: 'BBQ Smoked Chicken',
-            description: 'Smoked chicken served whole, halved, or quartered'
-          }
-        ]
-      },
-      {
-        _type: 'menu-subcategory',
-        name: 'Beef',
-        items: [
-          {
-            _type: 'menu-item',
-            name: 'Slow Cooked Beef Brisket',
-            description:
-              'Beef brisket seasoned with our signature rub and cooked 12 to 14 hours'
-          },
-          {
-            _type: 'menu-item',
-            name: 'Whole Tenderloin'
-          },
-          {
-            _type: 'menu-item',
-            name: 'Standing Rib Roast'
-          },
-          {
-            _type: 'menu-item',
-            name: 'Cowboy Cut Rib Eye with Bone In'
-          },
-          {
-            _type: 'menu-item',
-            name: 'New York Strip'
-          }
-        ]
-      },
-      {
-        _type: 'menu-subcategory',
-        name: 'Lamb',
-        items: [
-          {
-            _type: 'menu-item',
-            name: 'Rack of Lamb'
-          }
-        ]
-      },
-      {
-        _type: 'menu-subcategory',
-        name: 'Seafood',
-        items: [
-          {
-            _type: 'menu-item',
-            name: 'Smoked Salmon'
-          },
-          {
-            _type: 'menu-item',
-            name: 'Fresh Local Caught Fish'
-          },
-          {
-            _type: 'menu-item',
-            name: 'BBQ Shrimp',
-            description: `Pop'z BBQ shrimp`
-          }
-        ]
-      }
-    ]
-  },
-  {
-    _type: 'menu-category',
-    name: 'Sides',
-    categories: [
-      {
-        _type: 'menu-subcategory',
-        name: 'Sides',
-        items: [
-          {
-            _type: 'menu-item',
-            name: 'Potato Salad'
-          },
-          {
-            _type: 'menu-item',
-            name: 'Homemade Macaroni & Cheese',
-            description: 'Classic, creamy mac & cheese with or without bacon'
-          }
-        ]
-      }
-    ]
-  }
-]
+const cateringMenu = await getCateringMenu()
+const seoMenuSection = buildSeoMenuSection(cateringMenu)
 
 export const prerender = true
 ---
@@ -155,93 +18,8 @@ export const prerender = true
       '@context': 'https://schema.org',
       '@type': 'Menu',
       name: "Catering Menu at Pop'z BBQ",
-      description:
-        'Experience a wide range of South Georgia-style BBQ offerings, each dish cooked to perfection on custom wood-burning cookers.',
-      hasMenuSection: [
-        {
-          '@type': 'MenuSection',
-          name: 'Starters',
-          description: 'Kick off your meal with tantalizing appetizers.',
-          hasMenuItem: [
-            {
-              '@type': 'MenuItem',
-              name: 'Smoked Mini-Sweet Peppers',
-              description: 'Stuffed with cream cheese and wrapped in bacon.'
-            },
-            {
-              '@type': 'MenuItem',
-              name: 'BBQ Shrimp',
-              description: "Pop'z signature BBQ shrimp."
-            }
-          ]
-        },
-        {
-          '@type': 'MenuSection',
-          name: 'Meats & Seafood',
-          description:
-            'Experience the rich flavors of our slow-cooked meats and fresh seafood.',
-          hasMenuItem: [
-            {
-              '@type': 'MenuItem',
-              name: 'Slow Cooked Pulled Pork',
-              description: 'Tender pulled pork cooked 10 to 12 hours.'
-            },
-            {
-              '@type': 'MenuItem',
-              name: 'Whole Hog',
-              description: 'Whole hog with fruit over eyes for presentation.'
-            },
-            {
-              '@type': 'MenuItem',
-              name: 'South Georgia Style Ribs',
-              description: 'Fall off the bone, South Georgia-style ribs.'
-            },
-            {
-              '@type': 'MenuItem',
-              name: 'BBQ Smoked Chicken',
-              description: 'Smoked chicken served quartered.'
-            },
-            {
-              '@type': 'MenuItem',
-              name: 'Slow Cooked Beef Brisket',
-              description:
-                'Beef brisket seasoned with our signature rub and cooked 12 to 14 hours.'
-            },
-            {
-              '@type': 'MenuItem',
-              name: 'Rack of Lamb',
-              description: 'Perfectly smoked rack of lamb.'
-            },
-            {
-              '@type': 'MenuItem',
-              name: 'Smoked Salmon',
-              description: 'Freshly smoked salmon.'
-            },
-            {
-              '@type': 'MenuItem',
-              name: 'BBQ Shrimp',
-              description: "Pop'z signature BBQ shrimp."
-            }
-          ]
-        },
-        {
-          '@type': 'MenuSection',
-          name: 'Sides',
-          description: 'Complement your main dishes with our delightful sides.',
-          hasMenuItem: [
-            {
-              '@type': 'MenuItem',
-              name: 'Potato Salad',
-              description: 'Creamy and flavorful potato salad.'
-            },
-            {
-              '@type': 'MenuItem',
-              name: 'Homemade Macaroni & Cheese',
-              description: 'Classic, creamy mac & cheese with or without bacon.'
-            }
-          ]
-        }
-      ]
+      description: cateringMenu.description,
+      hasMenuSection: seoMenuSection
     }}
     }
     slot="head"
@@ -249,18 +27,17 @@ export const prerender = true
   <section class="py-24 lg:py-32 px-4 lg:px-6">
     <div class="mx-auto max-w-xl lg:max-w-4xl">
       <h2 class="text-gray-900 font-bold text-4xl tracking-tight">
-        Catering menu
+        {cateringMenu.title}
       </h2>
       <p class="text-gray-700 leading-8 text-lg mt-2">
-        Every meat is cooked to order and served hot off of one of my custom
-        wood-burning cookers.
+        {cateringMenu.subtitle}
       </p>
       <div class="mt-16 grid grid-cols-1 lg:grid-cols-3 gap-y-10 gap-x-8">
         {
-          items.map((item) => (
+          cateringMenu.categories.map((category) => (
             <div>
-              <CategoryDivider title={item.name} />
-              <MenuCategories categories={item.categories} />
+              <CategoryDivider title={category.name} />
+              <MenuCategories subcategories={category.subcategories} />
             </div>
           ))
         }

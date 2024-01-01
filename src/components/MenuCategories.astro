@@ -1,14 +1,18 @@
 ---
-const { categories } = Astro.props
+import type { CateringMenuSubcategory } from '../services/sanity/cateringMenu'
+interface Props {
+  subcategories: CateringMenuSubcategory[]
+}
+const { subcategories } = Astro.props
 ---
 
 <div class="space-y-6">
   {
-    categories.map((category) => (
+    subcategories.map((subcategory) => (
       <div class="space-y-2">
-        <span class="text-sm text-gray-500">{category.name}</span>
+        <span class="text-sm text-gray-500">{subcategory.name}</span>
         <ul class="space-y-4">
-          {category.items.map((item) => (
+          {subcategory.items.map((item) => (
             <li class="text-gray-900">
               {item.name}
               <p class="text-sm text-gray-700">{item.description}</p>
