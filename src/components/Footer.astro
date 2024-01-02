@@ -1,6 +1,9 @@
 ---
 import { Image } from 'astro:assets'
-import logoHome from '../assets/logo-home.png'
+import { getFooterData } from '../services/sanity/footer'
+import { getImageProps } from '../services/sanity/utils/image'
+
+const footerData = await getFooterData()
 ---
 
 <footer class="bg-gray-800">
@@ -13,16 +16,15 @@ import logoHome from '../assets/logo-home.png'
       >
         <div class="my-6 sm:mt-1">
           <Image
-            src={logoHome}
-            alt="Pop'z BBQ logo footer"
-            quality="high"
-            width={100}
+            alt="Pop'z BBQ light logo"
+            class="h-full"
+            {...getImageProps({
+              image: footerData.logo,
+              maxWidth: 100
+            })}
           />
         </div>
-        <p class="text-gray-400 text-sm mb-6 max-w-sm">
-          Providing cooked to order South Georgia style BBQ that is bad to the
-          bone.
-        </p>
+        <p class="text-gray-400 text-sm mb-6 max-w-sm">{footerData.summary}</p>
         <div class="flex mb-8 -ml-1">
           <a
             class="no-underline p-1"

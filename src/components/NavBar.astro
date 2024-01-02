@@ -1,6 +1,9 @@
 ---
 import { Image } from 'astro:assets'
-import logoHome from '../assets/logo-home.png'
+import { getNavBarData } from '../services/sanity/navBar'
+import { getImageProps } from '../services/sanity/utils/image'
+
+const navBarData = await getNavBarData()
 ---
 
 <nav-bar>
@@ -11,10 +14,12 @@ import logoHome from '../assets/logo-home.png'
       <div class="p-1 mr-2">
         <a href="/" class="text-white no-underline block" data-astro-prefetch>
           <Image
-            src={logoHome}
-            alt="Pop'z BBQ logo"
-            quality="high"
-            width={100}
+            alt="Pop'z BBQ light logo"
+            class="h-full"
+            {...getImageProps({
+              image: navBarData.logo,
+              maxWidth: 100
+            })}
           />
         </a>
       </div>
@@ -49,69 +54,39 @@ import logoHome from '../assets/logo-home.png'
       </div>
       {/* full size menu for devices except phones */}
       <nav class="hidden sm:block">
-        <ul class="flex items-center py-2 ml-6">
-          <li>
-            <a
-              href="/"
-              class="block px-3 py-2 rounded-md font-medium text-gray-300 transition duration-150 ease-in-out text-sm hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
-              data-astro-prefetch>Home</a
-            >
-          </li>
-          <li>
-            <a
-              href="/about"
-              class="ml-4 block px-3 py-2 rounded-md font-medium text-gray-300 transition duration-150 ease-in-out text-sm hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
-              data-astro-prefetch>About</a
-            >
-          </li>
-          <li>
-            <a
-              href="/menu"
-              class="ml-4 block px-3 py-2 rounded-md font-medium text-gray-300 transition duration-150 ease-in-out text-sm hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
-              data-astro-prefetch>Menu</a
-            >
-          </li>
-          <li>
-            <a
-              href="/book-event"
-              class="ml-4 block px-3 py-2 rounded-md font-medium text-gray-300 transition duration-150 ease-in-out text-sm hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
-              data-astro-prefetch>Book an Event</a
-            >
-          </li>
+        <ul class="flex items-center py-2 ml-6 space-x-4">
+          {
+            navBarData.items.map((item) => (
+              <li>
+                <a
+                  href={item.link}
+                  class="block px-3 py-2 rounded-md font-medium text-gray-300 transition duration-150 ease-in-out text-sm hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
+                  data-astro-prefetch
+                >
+                  {item.name}
+                </a>
+              </li>
+            ))
+          }
         </ul>
       </nav>
     </div>
     {/* mobile menu dropdown */}
     <nav id="mobile-menu" class="px-2 pt-2 pb-3 hidden sm:hidden">
       <ul>
-        <li>
-          <a
-            href="/"
-            class="block px-3 py-2 rounded-md font-medium text-gray-300 transition duration-150 ease-in-out text-sm hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
-            data-astro-prefetch>Home</a
-          >
-        </li>
-        <li>
-          <a
-            href="/about"
-            class="mt-1 block px-3 py-2 rounded-md font-medium text-gray-300 transition duration-150 ease-in-out text-sm hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
-            data-astro-prefetch>About</a
-          >
-        </li>
-        <li>
-          <a
-            href="/menu"
-            class="mt-1 block px-3 py-2 rounded-md font-medium text-gray-300 transition duration-150 ease-in-out text-sm hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
-            data-astro-prefetch>Menu</a
-          >
-        </li>
-        <li>
-          <a
-            href="/book-event"
-            class="mt-1 block px-3 py-2 rounded-md font-medium text-gray-300 transition duration-150 ease-in-out text-sm hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
-            data-astro-prefetch>Book an Event</a
-          >
-        </li>
+        {
+          navBarData.items.map((item) => (
+            <li class="first:mt-0 mt-1">
+              <a
+                href={item.link}
+                class="block px-3 py-2 rounded-md font-medium text-gray-300 transition duration-150 ease-in-out text-sm hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
+                data-astro-prefetch
+              >
+                {item.name}
+              </a>
+            </li>
+          ))
+        }
       </ul>
     </nav>
   </div>
