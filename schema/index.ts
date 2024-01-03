@@ -3,6 +3,7 @@ import { footer } from './footer';
 import { hero } from './hero';
 import { navBar, navBarItem } from './navBar';
 import { about } from './about'
+import { gallery } from './gallery';
 
 export const schemaTypes = [
   cateringMenuItem,
@@ -13,5 +14,6 @@ export const schemaTypes = [
   footer,
   navBarItem,
   navBar,
-  about
+  about,
+  gallery
 ]
