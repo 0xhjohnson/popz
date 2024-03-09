@@ -21,8 +21,8 @@ dependencies:
     specifier: ^5.0.16
     version: 5.0.16
   '@sanity/astro':
-    specifier: ^2.1.4
-    version: 2.1.4(@sanity/client@6.10.0)(astro@4.0.6)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)(sanity@3.23.4)(styled-components@6.1.6)
+    specifier: ^2.2.1
+    version: 2.2.1(@sanity/client@6.10.0)(astro@4.0.6)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)(sanity@3.23.4)(styled-components@6.1.6)
   '@sanity/client':
     specifier: ^6.10.0
     version: 6.10.0
@@ -1325,12 +1325,12 @@ packages:
     engines: {node: '>=10'}
     dev: false
 
-  /@sanity/astro@2.1.4(@sanity/client@6.10.0)(astro@4.0.6)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)(sanity@3.23.4)(styled-components@6.1.6):
-    resolution: {integrity: sha512-SK99IiiimoPJam8uaFQh9vgZy7qNJSKBJHII2sZQqXp54+468NUIUwEPaFZIBJcL8uyTQcqknLp37U4XL1hUDg==}
+  /@sanity/astro@2.2.1(@sanity/client@6.10.0)(astro@4.0.6)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)(sanity@3.23.4)(styled-components@6.1.6):
+    resolution: {integrity: sha512-RyvmmopF2perQDGellok+nizLsFxx/ywRQxALRTF3cmrDV/mecDCgmJzhSfQzQj9B+2m9UX8CBOxGgYsYV7vSw==}
     engines: {node: '>=18.14.1', npm: '>=6.14.0'}
     peerDependencies:
       '@sanity/client': ^6.4.12
-      astro: ^2.0.0 || ^3.0.0
+      astro: ^2.0.0 || ^3.0.0 || ^4.0.0
       react: ^18.2.0
       react-dom: ^18.2.0
       sanity: '*'
