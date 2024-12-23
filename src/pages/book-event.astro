@@ -3,21 +3,44 @@ import { Schema } from 'astro-seo-schema'
 import { Image } from 'astro:assets'
 import { z } from 'zod'
 import { clsx } from 'clsx'
+import { Resend } from 'resend'
+import dayjs from 'dayjs'
 import { generateTitle } from '../utils'
 import Layout from '../layouts/Layout.astro'
 import avatar from '../assets/avatar.png'
+const { env } = Astro.locals.runtime
 
 const eventSchema = z.object({
-  name: z.string().min(1),
-  email: z.string().email('Not a valid email address.'),
-  phone: z.string().min(7).max(17),
-  details: z.string().min(1)
+  name: z.string().trim().min(1, { message: 'Name is required.' }),
+  email: z
+    .string()
+    .trim()
+    .min(1, { message: 'Email is required.' })
+    .email('Please enter a valid email address.'),
+  phone: z
+    .string()
+    .trim()
+    .min(7, { message: 'Phone number must be at least 7 digits.' })
+    .max(17, { message: 'Phone number is too long.' }),
+  eventDate: z
+    .string()
+    .trim()
+    .min(1, { message: 'Event date is required.' })
+    .refine(
+      (dateStr) => {
+        const eventDate = new Date(dateStr)
+        return eventDate > new Date()
+      },
+      { message: 'Event date cannot be in the past.' }
+    ),
+  details: z.string().trim().min(1, { message: 'Event details are required.' })
 })
 
 const form = {
   name: '',
   email: '',
   phone: '',
+  eventDate: '',
   details: ''
 }
 
@@ -25,25 +48,31 @@ const errors = {
   name: '',
   email: '',
   phone: '',
+  eventDate: '',
   details: ''
 }
+
+let wasSuccessful = false
 
 if (Astro.request.method === 'POST') {
   try {
     const data = await Astro.request.formData()
-    const name = data.get('name')
-    form.name = name as string
-    const email = data.get('email')
-    form.email = email as string
-    const phone = data.get('phone-number')
-    form.phone = phone as string
-    const details = data.get('details')
-    form.details = details as string
+    const name = data.get('name').toString()
+    form.name = name
+    const email = data.get('email').toString()
+    form.email = email
+    const phone = data.get('phone-number').toString()
+    form.phone = phone
+    const eventDate = data.get('event-date').toString()
+    form.eventDate = eventDate
+    const details = data.get('details').toString()
+    form.details = details
 
     const event = {
       name,
       email,
       phone,
+      eventDate,
       details
     }
 
@@ -60,50 +89,36 @@ if (Astro.request.method === 'POST') {
 
     const hasErrors = Object.values(errors).some((msg) => msg)
     if (!hasErrors) {
-      const response = await fetch('https://api.mailchannels.net/tx/v1/send', {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json'
-        },
-        body: JSON.stringify({
-          personalizations: [
-            {
-              to: [{ name: 'Steve Johnson', email: 'steve@popzbbq.com' }],
-              reply_to: {
-                name: event.name,
-                email: event.email
-              }
-            }
-          ],
-          from: {
-            name: 'Popz BBQ',
-            email: 'noreply@popzbbq.com'
-          },
-          subject: 'Website booking inquiry',
-          content: [
-            {
-              type: 'text/plain',
-              value: `${event.name} has requested to book an event.
-              Details:
-              ${event.details}
-              
-              Contact info:
-              email: ${event.email}
-              phone: ${event.phone}`
-            }
-          ]
-        })
+      const resend = new Resend(env.RESEND_API_KEY)
+      const response = await resend.emails.send({
+        from: 'noreply@popzbbq.com',
+        to: 'popzbbq@embarqmail.com',
+        bcc: 'steve@popzbbq.com',
+        replyTo: event.email,
+        subject: 'Website booking inquiry',
+        text: `Booking Request
+
+Name: ${event.name}
+
+Event Date: ${dayjs(event.eventDate).format('dddd, MMMM D, YYYY h:mm A')}
+
+Event Details:
+${event.details}
+
+Contact Information:
+- Email: ${event.email}
+- Phone: ${event.phone}`
       })
-      if (!response.ok) {
-        try {
-          const { errors } = await response.clone().json()
-          console.error(errors)
-        } catch {
-          console.error(
-            `failed to send book event email, status ${response.status}`
-          )
-        }
+      if (response.error) {
+        console.error(response.error)
       }
+
+      wasSuccessful = true
+      form.name = ''
+      form.email = ''
+      form.phone = ''
+      form.eventDate = ''
+      form.details = ''
     }
   } catch (error) {
     if (error instanceof Error) {
@@ -134,150 +149,215 @@ if (Astro.request.method === 'POST') {
         size.
       </p>
       <div class="mt-16 flex flex-col lg:flex-row sm:gap-y-20 gap-16">
-        <form class="lg:flex-auto" method="POST">
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-8">
-            <div class="sm:col-span-2">
-              <label
-                for="name"
-                class="block text-sm font-semibold leading-6 text-gray-900"
-                >Name</label
-              >
-              <div class="mt-2.5">
-                <input
-                  type="text"
-                  name="name"
-                  id="name"
-                  autocomplete="name"
-                  aria-describedby="name-error"
-                  required
-                  value={form.name}
-                  class={clsx(
-                    'block w-full rounded-md border-0 px-3.5 py-2 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6',
-                    {
-                      'text-red-900 ring-red-300 placeholder:text-red-300 focus:ring-red-500':
-                        errors.name,
-                      'text-gray-900 ring-gray-300 placeholder:text-gray-400 focus:ring-orange-600':
-                        !errors.name
-                    }
-                  )}
-                />
-              </div>
-              {
-                errors.name && (
-                  <p class="mt-2 text-sm text-red-600" id="name-error">
-                    {errors.name}
-                  </p>
-                )
-              }
-            </div>
-            <div>
-              <label
-                for="email"
-                class="block text-sm font-semibold leading-6 text-gray-900"
-                >Email</label
-              >
-              <div class="mt-2">
-                <input
-                  type="email"
-                  name="email"
-                  id="email"
-                  placeholder="you@example.com"
-                  aria-describedby="email-error"
-                  required
-                  value={form.email}
-                  class={clsx(
-                    'block w-full rounded-md border-0 px-3.5 py-2 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6',
-                    {
-                      'text-red-900 ring-red-300 placeholder:text-red-300 focus:ring-red-500':
-                        errors.email,
-                      'text-gray-900 ring-gray-300 placeholder:text-gray-400 focus:ring-orange-600':
-                        !errors.email
-                    }
-                  )}
-                />
-              </div>
-              {
-                errors.email && (
-                  <p class="mt-2 text-sm text-red-600" id="email-error">
-                    {errors.email}
-                  </p>
-                )
-              }
-            </div>
-            <div>
-              <label
-                for="phone-number"
-                class="block text-sm font-semibold leading-6 text-gray-900"
-                >Phone number</label
-              >
-              <div class="mt-2">
-                <input
-                  type="tel"
-                  name="phone-number"
-                  id="phone-number"
-                  aria-describedby="phone-error"
-                  required
-                  value={form.phone}
-                  class={clsx(
-                    'block w-full rounded-md border-0 px-3.5 py-2 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6',
-                    {
-                      'text-red-900 ring-red-300 placeholder:text-red-300 focus:ring-red-500':
-                        errors.phone,
-                      'text-gray-900 ring-gray-300 placeholder:text-gray-400 focus:ring-orange-600':
-                        !errors.phone
-                    }
-                  )}
-                />
-              </div>
-              {
-                errors.phone && (
-                  <p class="mt-2 text-sm text-red-600" id="phone-error">
-                    {errors.phone}
-                  </p>
-                )
-              }
-            </div>
-            <div class="sm:col-span-2">
-              <label
-                for="details"
-                class="block text-sm font-semibold leading-6 text-gray-900"
-                >Details</label
-              >
-              <div class="mt-2.5">
-                <textarea
-                  name="details"
-                  id="details"
-                  rows="4"
-                  aria-describedby="details-error"
-                  required
-                  class={clsx(
-                    'block w-full rounded-md border-0 px-3.5 py-2 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6',
-                    {
-                      'text-red-900 ring-red-300 placeholder:text-red-300 focus:ring-red-500':
-                        errors.details,
-                      'text-gray-900 ring-gray-300 placeholder:text-gray-400 focus:ring-orange-600':
-                        !errors.details
-                    }
-                  )}>{form.details}</textarea
+        <div>
+          <div
+            class={clsx(
+              'rounded-md bg-green-50 p-4 mb-4',
+              !wasSuccessful && 'hidden'
+            )}
+            aria-live="polite"
+          >
+            <div class="flex">
+              <div class="shrink-0">
+                <svg
+                  class="size-5 text-green-400"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                  data-slot="icon"
                 >
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z"
+                    clip-rule="evenodd"></path>
+                </svg>
               </div>
-              {
-                errors.details && (
-                  <p class="mt-2 text-sm text-red-600" id="details-error">
-                    {errors.details}
-                  </p>
-                )
-              }
+              <div class="ml-3">
+                <p class="text-sm font-medium text-green-800">
+                  Request successfully sent
+                </p>
+              </div>
             </div>
           </div>
-          <div class="mt-10">
-            <button
-              type="submit"
-              class="block w-full rounded-md bg-orange-700 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-orange-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-700"
-              >Let's talk</button
-            >
-          </div>
-        </form>
+          <form class="lg:flex-auto" method="POST">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-8">
+              <div class="sm:col-span-2">
+                <label
+                  for="name"
+                  class="block text-sm font-semibold leading-6 text-gray-900"
+                  >Name</label
+                >
+                <div class="mt-2.5">
+                  <input
+                    type="text"
+                    name="name"
+                    id="name"
+                    autocomplete="name"
+                    aria-describedby="name-error"
+                    required
+                    value={form.name}
+                    class={clsx(
+                      'block w-full rounded-md border-0 px-3.5 py-2 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6',
+                      {
+                        'text-red-900 ring-red-300 placeholder:text-red-300 focus:ring-red-500':
+                          errors.name,
+                        'text-gray-900 ring-gray-300 placeholder:text-gray-400 focus:ring-orange-600':
+                          !errors.name
+                      }
+                    )}
+                  />
+                </div>
+                {
+                  errors.name && (
+                    <p class="mt-2 text-sm text-red-600" id="name-error">
+                      {errors.name}
+                    </p>
+                  )
+                }
+              </div>
+              <div>
+                <label
+                  for="email"
+                  class="block text-sm font-semibold leading-6 text-gray-900"
+                  >Email</label
+                >
+                <div class="mt-2">
+                  <input
+                    type="email"
+                    name="email"
+                    id="email"
+                    autocomplete="email"
+                    aria-describedby="email-error"
+                    required
+                    value={form.email}
+                    class={clsx(
+                      'block w-full rounded-md border-0 px-3.5 py-2 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6',
+                      {
+                        'text-red-900 ring-red-300 placeholder:text-red-300 focus:ring-red-500':
+                          errors.email,
+                        'text-gray-900 ring-gray-300 placeholder:text-gray-400 focus:ring-orange-600':
+                          !errors.email
+                      }
+                    )}
+                  />
+                </div>
+                {
+                  errors.email && (
+                    <p class="mt-2 text-sm text-red-600" id="email-error">
+                      {errors.email}
+                    </p>
+                  )
+                }
+              </div>
+              <div>
+                <label
+                  for="phone-number"
+                  class="block text-sm font-semibold leading-6 text-gray-900"
+                  >Phone number</label
+                >
+                <div class="mt-2">
+                  <input
+                    type="tel"
+                    name="phone-number"
+                    id="phone-number"
+                    autocomplete="tel-national"
+                    aria-describedby="phone-error"
+                    required
+                    value={form.phone}
+                    class={clsx(
+                      'block w-full rounded-md border-0 px-3.5 py-2 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6',
+                      {
+                        'text-red-900 ring-red-300 placeholder:text-red-300 focus:ring-red-500':
+                          errors.phone,
+                        'text-gray-900 ring-gray-300 placeholder:text-gray-400 focus:ring-orange-600':
+                          !errors.phone
+                      }
+                    )}
+                  />
+                </div>
+                {
+                  errors.phone && (
+                    <p class="mt-2 text-sm text-red-600" id="phone-error">
+                      {errors.phone}
+                    </p>
+                  )
+                }
+              </div>
+              <div class="sm:col-span-2">
+                <label
+                  for="event-date"
+                  class="block text-sm font-semibold leading-6 text-gray-900"
+                  >Event date</label
+                >
+                <div class="mt-2.5">
+                  <input
+                    type="datetime-local"
+                    name="event-date"
+                    id="event-date"
+                    aria-describedby="event-date-error"
+                    required
+                    value={form.eventDate}
+                    class={clsx(
+                      'block w-full rounded-md border-0 px-3.5 py-2 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6',
+                      {
+                        'text-red-900 ring-red-300 placeholder:text-red-300 focus:ring-red-500':
+                          errors.eventDate,
+                        'text-gray-900 ring-gray-300 placeholder:text-gray-400 focus:ring-orange-600':
+                          !errors.eventDate
+                      }
+                    )}
+                  />
+                </div>
+                {
+                  errors.eventDate && (
+                    <p class="mt-2 text-sm text-red-600" id="event-date-error">
+                      {errors.eventDate}
+                    </p>
+                  )
+                }
+              </div>
+              <div class="sm:col-span-2">
+                <label
+                  for="details"
+                  class="block text-sm font-semibold leading-6 text-gray-900"
+                  >Details</label
+                >
+                <div class="mt-2.5">
+                  <textarea
+                    name="details"
+                    id="details"
+                    rows="4"
+                    aria-describedby="details-error"
+                    required
+                    class={clsx(
+                      'block w-full rounded-md border-0 px-3.5 py-2 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6',
+                      {
+                        'text-red-900 ring-red-300 placeholder:text-red-300 focus:ring-red-500':
+                          errors.details,
+                        'text-gray-900 ring-gray-300 placeholder:text-gray-400 focus:ring-orange-600':
+                          !errors.details
+                      }
+                    )}>{form.details}</textarea
+                  >
+                </div>
+                {
+                  errors.details && (
+                    <p class="mt-2 text-sm text-red-600" id="details-error">
+                      {errors.details}
+                    </p>
+                  )
+                }
+              </div>
+            </div>
+            <div class="mt-10">
+              <button
+                type="submit"
+                class="block w-full rounded-md bg-orange-700 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-orange-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-700"
+                >Let's talk</button
+              >
+            </div>
+          </form>
+        </div>
         <div class="lg:flex-none lg:w-80 lg:mt-6">
           <blockquote class="leading-8 font-semibold text-lg">
             <p>

@@ -16,7 +16,10 @@ export default defineConfig({
   prefetch: true,
   adapter: cloudflare({
     mode: 'directory',
-    imageService: 'passthrough'
+    imageService: 'passthrough',
+    platformProxy: {
+      enabled: true
+    }
   }),
   integrations: [
     sanityIntegration({
