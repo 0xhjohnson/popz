@@ -13,16 +13,22 @@ export const prerender = true
 ---
 
 <Layout title={generateTitle('Catering Menu')}>
+  <meta
+    name="description"
+    content="Explore Pop'z BBQ catering menu, featuring slow-cooked South Georgia-style BBQ, smoked meats, seafood, and homemade sides, all served fresh and hot."
+    slot="description"
+  />
   <Schema
     item={{
       '@context': 'https://schema.org',
       '@type': 'Menu',
       name: "Catering Menu at Pop'z BBQ",
-      description: cateringMenu.description,
+      description:
+        "Explore Pop'z BBQ catering menu, featuring slow-cooked South Georgia-style BBQ, smoked meats, seafood, and homemade sides, all served fresh and hot.",
       hasMenuSection: seoMenuSection
     }}
     }
-    slot="head"
+    slot="schema"
   />
   <section class="py-24 lg:py-32 px-4 lg:px-6">
     <div class="mx-auto max-w-xl lg:max-w-4xl">

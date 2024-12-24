@@ -12,12 +12,18 @@ export const prerender = true
 ---
 
 <Layout title={generateTitle('Gallery')}>
+  <meta
+    name="description"
+    content="Browse Pop'z BBQ gallery to see how our South Georgia-style BBQ elevates events, from intimate gatherings to large celebrations."
+    slot="description"
+  />
   <Schema
     item={{
       '@context': 'https://schema.org',
       '@type': 'ImageGallery',
       name: `Pop'z BBQ Event Gallery`,
-      description: galleryData.subtitle,
+      description:
+        "Browse Pop'z BBQ gallery to see how our South Georgia-style BBQ elevates events, from intimate gatherings to large celebrations.",
       url: 'https://popzbbq.com/gallery',
       image: galleryData.images.map(
         (image) =>
@@ -29,7 +35,7 @@ export const prerender = true
           }).src
       )
     }}
-    slot="head"
+    slot="schema"
   />
   <div class="py-24 lg:py-32 px-4 lg:px-6">
     <div

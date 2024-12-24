@@ -11,6 +11,11 @@ export const prerender = true
 ---
 
 <Layout title={generateTitle('About Us')}>
+  <meta
+    name="description"
+    content="Experience 'Bad to the Bone' South Georgia-style BBQ, slow-cooked over custom wood-burning pits and served with our signature homemade sauce."
+    slot="description"
+  />
   <Schema
     item={{
       '@context': 'https://schema.org',
@@ -19,7 +24,7 @@ export const prerender = true
         '@type': 'Restaurant',
         name: `Pop'z BBQ & Catering`,
         description:
-          "Experience 'Bad to the Bone' South Georgia-style BBQ, rooted in tradition and passion, from our custom wood-burning pits to our signature homemade sauce.",
+          "Experience 'Bad to the Bone' South Georgia-style BBQ, slow-cooked over custom wood-burning pits and served with our signature homemade sauce.",
         url: 'https://popzbbq.com',
         telephone: '+1-239-823-0485',
         email: 'popzbbq@embarqmail.com',
@@ -66,7 +71,7 @@ export const prerender = true
         ]
       }
     }}
-    slot="head"
+    slot="schema"
   />
   <div class="py-24 lg:py-32 px-4 lg:px-6">
     <div

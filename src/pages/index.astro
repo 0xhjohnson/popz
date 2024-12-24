@@ -9,13 +9,18 @@ export const prerender = true
 ---
 
 <Layout isFullWidth title={generateTitle('Bad to the Bone South Georgia BBQ')}>
+  <meta
+    name="description"
+    content="Pop'z BBQ specializes in 'Bad to the Bone' South Georgia-style BBQ, offering unbeatable flavor, quality, and customer service that keeps guests coming back."
+    slot="description"
+  />
   <Schema
     item={{
       '@context': 'https://schema.org',
       '@type': 'Restaurant',
       name: `Pop'z BBQ & Catering`,
       description:
-        "Specializing in 'Bad to the Bone' South Georgia-style BBQ, Pop'z BBQ offers top-notch customer service, quality, and flavor that keeps customers coming back for more.",
+        "Pop'z BBQ specializes in 'Bad to the Bone' South Georgia-style BBQ, offering unbeatable flavor, quality, and customer service that keeps guests coming back.",
       url: 'https://popzbbq.com',
       telephone: '+1-239-823-0485',
       email: 'popzbbq@embarqmail.com',
@@ -69,7 +74,7 @@ export const prerender = true
         }
       ]
     }}
-    slot="head"
+    slot="schema"
   />
   <Hero />
   <Feature />

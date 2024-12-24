@@ -16,7 +16,8 @@ const { title, isFullWidth } = Astro.props
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="preconnect" href="https://cdn.sanity.io" />
     <link rel="dns-prefetch" href="https://static.cloudflareinsights.com" />
-    <slot name="head" />
+    <slot name="description" />
+    <slot name="schema" />
     {title && <title>{title}</title>}
   </head>
   <body class="font-sans flex h-screen flex-col">

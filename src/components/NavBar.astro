@@ -28,6 +28,7 @@ const navBarData = await getNavBarData()
           id="menu-button"
           class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:bg-gray-700 focus:text-white transition duration-150 ease-in-out"
           aria-expanded="false"
+          aria-label="Open menu"
         >
           <svg
             class="h-6 w-6"
@@ -121,6 +122,10 @@ const navBarData = await getNavBarData()
       menuButton.addEventListener('click', () => {
         isOpen = !isOpen
         menuButton.setAttribute('aria-expanded', String(isOpen))
+        menuButton.setAttribute(
+          'aria-label',
+          isOpen ? 'Close menu' : 'Open menu'
+        )
 
         if (isOpen) {
           menuIcon.classList.remove('inline-flex')
