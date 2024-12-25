@@ -1,8 +1,12 @@
 import type { CateringMenu } from './services/sanity/cateringMenu';
 import type { MenuSection } from 'schema-dts';
 
-export function generateTitle(pageTitle: string) {
-  return `${pageTitle} | Pop'z BBQ & Catering`
+export function generateTitle(pageTitle?: string) {
+  if (!pageTitle) {
+    return `South Georgia-Style BBQ Catering in Southwest Florida | Pop'z BBQ`
+  }
+
+  return `${pageTitle} - South Georgia-Style BBQ Catering in Southwest Florida | Pop'z BBQ`
 }
 
 export function stripTrailingSlash(str: string) {
