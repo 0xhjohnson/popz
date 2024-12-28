@@ -16,12 +16,14 @@ export function getImageProps({
   minimumWidthStep = DEFAULT_MIN_STEP,
   customWidthSteps,
   sizes,
+  loading = 'lazy',
 }: {
   image: Image
   maxWidth?: CSSStyleDeclaration['maxWidth'] | number;
   minimumWidthStep?: number;
   customWidthSteps?: number[];
   sizes?: HTMLImageElement['sizes'];
+  loading?: HTMLImageElement['loading'];
 }) {
   const maxWidth =
     typeof userMaxWidth === 'number' ? userMaxWidth : LARGEST_VIEWPORT;
@@ -76,6 +78,7 @@ export function getImageProps({
         : sizes || `(max-width: ${maxWidth}px) 100vw, ${maxWidth}px`,
     width: retinaSizes[0],
     height: retinaSizes[0] / imageDimensions.aspectRatio,
+    loading,
   };
 }
 

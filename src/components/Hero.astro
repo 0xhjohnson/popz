@@ -61,14 +61,13 @@ const homepageHero = await getHomepageHero()
       <Image
         alt="Pop'z BBQ logo on wood background"
         class="w-full h-full object-cover"
-        decoding="auto"
-        loading="eager"
         fetchpriority="high"
         {...getImageProps({
           image: homepageHero.mainImage,
           maxWidth: 1023,
           customWidthSteps: [430, 640, 768, 890, 1023],
-          sizes: '(max-width: 1023px) 100vw, 50vw'
+          sizes: '(max-width: 1023px) 100vw, 50vw',
+          loading: 'eager'
         })}
       />
     </div>
